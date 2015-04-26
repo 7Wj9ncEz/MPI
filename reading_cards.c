@@ -66,6 +66,14 @@ int main(int argc, char **argv) {
   //Enviar mensagem em modo Bufferizardo MPI_Bsend
 
   printf("\n ReadingCards::Bsend Enviando Mensagem ao Processo de Rank = %d... \n",target_process_rank);
+
+  //Neste modo MPI_Bsend o usuário garante a bufferização, pelo sistema, das
+  //mensagens enviadas.Este modo um overhead de sistema adicional é ocasionado
+  //pela cópia dos dados do buffer da mensagem para o buffer do usuário.
+  //Overhead de sincronismo é eliminado na tarefa emissora, para ela é irrelevante o
+  //momento em que a tarefa receptora executa a operação de recebimento.
+  //Algum overhead de sincronismo pode acontecer na tarefa receptora, ela
+  //precisa esperar a mensagem chegar.
   MPI_Bsend(message_content, strlen(message_content), MPI_BYTE,
              target_process_rank,process_tag, MPI_COMM_WORLD);
 
