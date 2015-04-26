@@ -47,9 +47,10 @@ int main(int argc, char **argv) {
 
   // Insere Barreira para Sincronizar os Processos
   // Essa barreira é importante estar antes do MPI_Recv pois precisamos ter uma
-  // Mensagem enviada pelo MPI_Bsend de outro programa, logo esse processo
-  // Precisa de uma barreira antes de Tentar Receber uma Mensagem
-
+  // Mensagem enviada pelo outro programa que envia essa mensagem  logo esse processo
+  // Precisa de uma barreira antes de Tentar Receber uma Mensagem.
+  // Isso garante que quando o processo for ler uma mensagem essa mensagem já
+  // Tenha sido enviada pelo programa que envia a mesangem lida do cartao.
   printf("\n ProcessCards::Barrier Barreira Ativa, Sincronizando Processos... \n");
   MPI_Barrier(MPI_COMM_WORLD);
 
@@ -57,15 +58,17 @@ int main(int argc, char **argv) {
   MPI_Recv(received_message, sizeof(received_message), MPI_BYTE,
              sender_process_rank, process_tag, MPI_COMM_WORLD, &status);
   printf("\n ProcessCards::Receive Recebendo Mensagem do Processo %d... \n",sender_process_rank);
+  printf("\n ProcessCards::Receive Mensagem recebida: \n\n %s\n\n",received_message);
+
 
   // TO DO: Processamento dos dados recebidos e enviar mensagem processada
-
+  strcpy(processed_message, received_message); // TO DO PROCESSAR A MENSAGEM
   // Envia a mensagem recebida ja processada para ser escrita no arquivo final
 
-  printf("\n ProcessCards::Bsend Enviando Mensagem ao Processo %d... \n\n",target_process_rank);
-  MPI_Bsend(received_message, strlen(received_message), MPI_BYTE,
+  printf("\n ProcessCards::Bsend Enviando Mensagem processada ao Processo %d... \n\n",target_process_rank);
+  MPI_Bsend(processed_message, strlen(received_message), MPI_BYTE,
             target_process_rank,process_tag, MPI_COMM_WORLD);
-
+  printf("\n ReadingCards::Bsend Mensagem enviada: \n\n %s\n\n",processed_message);
 
   MPI_Finalize();
 }

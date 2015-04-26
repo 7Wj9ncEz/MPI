@@ -69,6 +69,8 @@ int main(int argc, char **argv) {
   MPI_Bsend(message_content, strlen(message_content), MPI_BYTE,
              target_process_rank,process_tag, MPI_COMM_WORLD);
 
+  printf("\n ReadingCards::Bsend Mensagem enviada: \n\n %s\n\n",message_content);
+
   //Barreira para sincronização dos processos
   //Essa  barreira é importante ficar depois do MPI_Bsend para garantir que os
   //outros processos só irão a mensagem depois de enviada.

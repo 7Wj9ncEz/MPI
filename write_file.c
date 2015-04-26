@@ -50,10 +50,13 @@ int main(int argc, char **argv) {
 
   //Removendo lixo na ultima posição que chega ao message_processed_received
   message_processed_received[(strlen(message_processed_received)-1)] = '\0';
-//  puts(message_processed_received);
 
+  printf("\n WriteFile::Receive Mensagem recebida: \n\n %s\n\n",received_message);
+
+  //TO DO criar funcao para escrever arquivo de saida
   printf("\n WriteFile::write Escrevendo Arquivo de Saida... \n\n");
   //TO DO : Escrever string recebida no arquivo
+
   printf("\n Arquivo de saida em :  \n");
   printf("\n ----- Fim de Execucao ----- \n\n");
 
