@@ -17,6 +17,7 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv) {
 
@@ -29,7 +30,8 @@ int main(int argc, char **argv) {
   MPI_Request send_request;
   MPI_Status status;
   char received_message[80];
-  char processed_message[80];
+  char *processed_message;
+  processed_message = (char*) malloc(sizeof(char)*80);
 
 
   //INICIA O MPI
@@ -66,7 +68,7 @@ int main(int argc, char **argv) {
   // Envia a mensagem recebida ja processada para ser escrita no arquivo final
 
   printf("\n ProcessCards::Bsend Enviando Mensagem processada ao Processo %d... \n\n",target_process_rank);
-  MPI_Bsend(processed_message, strlen(received_message), MPI_BYTE,
+  MPI_Bsend(processed_message, 90, MPI_BYTE,
             target_process_rank,process_tag, MPI_COMM_WORLD);
   printf("\n ReadingCards::Bsend Mensagem enviada: \n\n %s\n\n",processed_message);
 

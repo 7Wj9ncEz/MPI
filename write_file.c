@@ -17,6 +17,11 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+
+
+void write_file(char *mesage);
+
 
 int main(int argc, char **argv) {
 
@@ -26,7 +31,10 @@ int main(int argc, char **argv) {
   int process_tag = 1;
   MPI_Request receive_parsed_text_request;
   MPI_Status status;
-  char message_processed_received[80];
+  char *message_processed_received;
+
+  message_processed_received = (char*) malloc(sizeof(char)*80);
+
 
   //INICIA O MPI
   MPI_Init(&argc, &argv); /*START MPI */
@@ -40,27 +48,26 @@ int main(int argc, char **argv) {
   printf("\n WriteFile::Barrier Barreira Ativa, Sincronizando Processos... \n");
   MPI_Barrier(MPI_COMM_WORLD);
 
-  MPI_Recv(message_processed_received, sizeof(message_processed_received),
+  MPI_Recv(message_processed_received, 90,
            MPI_BYTE,sender_process_rank, process_tag, MPI_COMM_WORLD,
              &status);
 
   printf("\n WriteFile::Receive Recebendo Mensagem do Processo %d... \n\n",sender_process_rank);
-
-//  puts("Write receveu O :");
-
-  //Removendo lixo na ultima posição que chega ao message_processed_received
-  message_processed_received[(strlen(message_processed_received)-1)] = '\0';
-
-  printf("\n WriteFile::Receive Mensagem recebida: \n\n %s\n\n",received_message);
-
   //TO DO criar funcao para escrever arquivo de saida
   printf("\n WriteFile::write Escrevendo Arquivo de Saida... \n\n");
-  //TO DO : Escrever string recebida no arquivo
+  write_file(message_processed_received);
 
-  printf("\n Arquivo de saida em :  \n");
+  printf("\n Arquivo de saida em : card_processed.txt \n");
   printf("\n ----- Fim de Execucao ----- \n\n");
 
 
   //SAIR DO MPI MPI
   MPI_Finalize();
+}
+
+void write_file(char *mesage){
+  FILE *file;
+  file = fopen("card_processed.txt","w+");
+  fprintf(file,mesage);
+  fclose(file);
 }
